@@ -1,0 +1,19 @@
+# Runtime logs and generated packet captures
+*.log
+*.pcap
+*.pcapng
+
+# EveBox local SQLite/runtime data
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.bookmark
+
+# Local environment and editor files
+.env
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db
