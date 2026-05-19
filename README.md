@@ -1,13 +1,13 @@
-# Design and Implementation of a Signature-Based IDS with Suricata and EveBox on WSL
+# Design and Implementation of a Signature-Based IDS with Suricata and EveBox on Ubuntu Linux
 
-This project implements a signature-based Intrusion Detection System using Suricata IDS on Ubuntu WSL. Suricata detects suspicious traffic using ET Open rules and custom local rules. Alerts are written to EVE JSON format and displayed through the EveBox web GUI.
+This project implements a signature-based Intrusion Detection System using Suricata IDS on Ubuntu Linux. It was tested on WSL/WSL2, but the same workflow can be used on a native Ubuntu installation or an Ubuntu virtual machine. Suricata detects suspicious traffic using ET Open rules and custom local rules. Alerts are written to EVE JSON format and displayed through the EveBox web GUI.
 
 ## Fast Deployment
 
 For teammates who only need to deploy and verify the project, use the quickstart path:
 
 ```bash
-cd suricata-evebox-wsl-ids
+cd CSC38000_GROUP_G_IDS_LINUX
 ./scripts/00_deploy_all.sh
 ```
 
@@ -21,7 +21,7 @@ See `QUICKSTART.md` for the simplified workflow. The rest of this README explain
 
 ## Project Purpose
 
-The purpose of this project is to design, install, configure, and test a Linux-based Intrusion Detection System. The IDS monitors network traffic, compares packets and flows against known attack signatures, and records alerts when traffic matches a rule. The project uses Ubuntu on WSL as the Linux environment, Suricata as the IDS engine, and EveBox as the graphical interface for reviewing alerts.
+The purpose of this project is to design, install, configure, and test a Linux-based Intrusion Detection System. The IDS monitors network traffic, compares packets and flows against known attack signatures, and records alerts when traffic matches a rule. The project uses Ubuntu Linux as the operating environment, Suricata as the IDS engine, and EveBox as the graphical interface for reviewing alerts.
 
 ## Why This Is Signature-Based
 
@@ -40,14 +40,14 @@ Suricata is a widely used open-source IDS, IPS, and network security monitoring 
 
 Suricata writes alerts to log files such as `fast.log` and `eve.json`. EveBox provides a web GUI that reads Suricata EVE JSON alerts and presents them in a dashboard. This makes it easier to inspect alert timestamps, source and destination addresses, protocols, signatures, signature IDs, and severity values.
 
-## Why WSL
+## Linux Environment Notes
 
-Ubuntu on WSL provides a Linux environment on a Windows host without requiring a full virtual machine. This is useful for installation, rule management, scripting, and log analysis. However, WSL packet capture can behave differently from a full Linux VM, so this project supports both live traffic mode and offline PCAP mode.
+Ubuntu on WSL provides a convenient Linux environment on a Windows host without requiring a full virtual machine. The project is not limited to WSL: it can also run on native Ubuntu or an Ubuntu VM. Because live packet capture can vary across WSL, VM, and native interfaces, the project supports both live traffic mode and offline PCAP mode.
 
 ## Repository Layout
 
 ```text
-suricata-evebox-wsl-ids/
+CSC38000_GROUP_G_IDS_LINUX/
 ├── README.md
 ├── docs/
 ├── scripts/
@@ -61,7 +61,7 @@ suricata-evebox-wsl-ids/
 Start from the project directory:
 
 ```bash
-cd suricata-evebox-wsl-ids
+cd CSC38000_GROUP_G_IDS_LINUX
 ```
 
 Install basic Linux tools used by the project. This includes tools for package setup, network testing, JSON filtering, and simple traffic generation.
@@ -90,7 +90,9 @@ Copy the custom local rules into the Suricata rules directory and create a backu
 ./scripts/03_configure_suricata.sh
 ```
 
-Then edit Suricata's configuration file:
+The repository does not include a complete `suricata.yaml` because that file is installed and maintained by the Suricata package. The project documents the required edits and the automated verification script updates the installed file after creating a backup.
+
+Then edit Suricata's configuration file if you are configuring it manually:
 
 ```bash
 sudo nano /etc/suricata/suricata.yaml
@@ -98,7 +100,7 @@ sudo nano /etc/suricata/suricata.yaml
 
 Verify these settings:
 
-- `HOME_NET` includes localhost and WSL private network ranges.
+- `HOME_NET` includes localhost and private lab network ranges.
 - `rule-files` includes both `suricata.rules` and `local.rules`.
 - EVE JSON output is enabled and writes to `/var/log/suricata/eve.json`.
 
@@ -124,7 +126,7 @@ sudo suricata -T -c /etc/suricata/suricata.yaml -v
 
 ## Run Suricata
 
-Live mode monitors a network interface. The script tries to detect the default WSL interface, usually `eth0`.
+Live mode monitors a network interface. The script tries to detect the default route interface; in WSL this is usually `eth0`.
 
 ```bash
 ./scripts/06_run_suricata_live.sh
@@ -136,7 +138,7 @@ For localhost-only tests, you may need to monitor the loopback interface instead
 ./scripts/06_run_suricata_live.sh lo
 ```
 
-Offline PCAP mode analyzes a packet capture file. This is the backup validation method when WSL live capture is limited.
+Offline PCAP mode analyzes a packet capture file. This is the backup validation method when live capture is limited or inconsistent.
 
 ```bash
 ./scripts/09_run_suricata_pcap.sh path/to/file.pcap
@@ -155,6 +157,8 @@ Run EveBox in standalone SQLite mode against Suricata's EVE JSON log.
 ```bash
 ./scripts/07_run_evebox.sh
 ```
+
+The one-command demo helper uses `--no-auth --no-tls`; the manual EveBox helper disables TLS for localhost testing. These modes are for local demonstration only; never expose port `5636` to a network without proper authentication and TLS.
 
 Open the GUI in a browser:
 
@@ -182,14 +186,14 @@ Check EVE JSON alerts:
 sudo tail -f /var/log/suricata/eve.json | jq 'select(.event_type=="alert")'
 ```
 
-Expected custom alerts include ICMP ping detection, possible Nmap SYN scan detection, suspicious HTTP URI detection, SSH connection attempt detection, and Telnet traffic detection.
+Expected custom alerts include ICMP ping detection, possible Nmap SYN scan detection, suspicious HTTP URI detection, SSH connection attempt detection, and Telnet traffic detection. The ICMP and SSH rules are rate-limited to reduce repeated demo noise; the SSH rule treats any SSH attempt as noteworthy for this project.
 
 ## Screenshots for Final Report
 
 Collect screenshots of the Ubuntu version, Suricata installation output, `suricata --build-info`, `suricata-update`, `local.rules`, the `suricata.yaml` rule configuration, configuration test success, live Suricata execution, generated test traffic, `fast.log` alerts, `eve.json` alerts, the EveBox dashboard, and EveBox alert details.
 
-See `screenshots/README.md` for the full checklist.
+See `screenshots/README.md` for the full checklist. The checklist is not a substitute for evidence; add actual screenshot files before submission.
 
-## WSL Limitation Notice
+## Linux and WSL Capture Notes
 
-WSL is a valid Linux environment for this project, but it should not be described as identical to a full Linux VM for packet capture. If live interface monitoring does not detect traffic, test traffic generated inside WSL, try a different interface such as `lo` or `eth0`, and use PCAP/offline mode as backup evidence.
+WSL is a valid Linux environment for this project, but it should not be described as identical to a full Linux VM for packet capture. If live interface monitoring does not detect traffic, generate traffic inside the same Linux environment, try a different interface such as `lo` or `eth0`, and use PCAP/offline mode as backup evidence.

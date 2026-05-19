@@ -1,5 +1,5 @@
-alert icmp any any -> $HOME_NET any (msg:"LOCAL ICMP Ping Detected"; sid:1000001; rev:1;)
+alert icmp any any -> $HOME_NET any (msg:"LOCAL ICMP Ping Detected"; threshold:type limit, track by_src, count 1, seconds 10; sid:1000001; rev:2;)
 alert tcp any any -> $HOME_NET any (msg:"LOCAL Possible Nmap SYN Scan"; flags:S; threshold:type threshold, track by_src, count 10, seconds 5; sid:1000002; rev:1;)
 alert http any any -> $HOME_NET any (msg:"LOCAL Suspicious HTTP Test String Detected"; content:"test-attack"; http_uri; sid:1000003; rev:1;)
-alert tcp any any -> $HOME_NET 22 (msg:"LOCAL SSH Connection Attempt"; flags:S; sid:1000004; rev:1;)
+alert tcp any any -> $HOME_NET 22 (msg:"LOCAL SSH Connection Attempt"; flags:S; threshold:type limit, track by_src, count 1, seconds 60; sid:1000004; rev:2;)
 alert tcp any any -> $HOME_NET 23 (msg:"LOCAL Telnet Traffic Detected"; sid:1000005; rev:1;)

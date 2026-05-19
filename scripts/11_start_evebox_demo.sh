@@ -23,10 +23,13 @@ pkill -x evebox >/dev/null 2>&1 || true
 rm -rf "${DATA_DIR}"
 mkdir -p "${DATA_DIR}"
 
+echo "WARNING: Demo mode disables EveBox authentication and TLS. Keep it on localhost only."
+
 setsid evebox server \
   --sqlite \
   --no-auth \
   --no-tls \
+  --host 127.0.0.1 \
   --data-directory "${DATA_DIR}" \
   --input "${EVE_JSON}" \
   >"${LOG_FILE}" 2>&1 < /dev/null &

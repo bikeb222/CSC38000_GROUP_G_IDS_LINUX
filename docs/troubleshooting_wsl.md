@@ -1,4 +1,6 @@
-# WSL Troubleshooting Guide
+# WSL-Specific Troubleshooting Guide
+
+This guide applies when the project is run inside WSL/WSL2. The main project can also run on native Ubuntu or an Ubuntu VM.
 
 ## Suricata Does Not Detect Traffic
 
@@ -14,7 +16,7 @@ Try running Suricata on `lo` if the test traffic targets `127.0.0.1`.
 ./scripts/06_run_suricata_live.sh lo
 ```
 
-Generate traffic from inside WSL so that Suricata has a better chance of seeing it.
+Generate traffic from inside WSL so that Suricata has a better chance of seeing the same packets.
 
 ```bash
 ./scripts/08_generate_test_traffic.sh
@@ -39,7 +41,7 @@ ls -lah /var/log/suricata/eve.json
 Check file permissions. If the file is owned by root, run EveBox with `sudo`, as the project script does.
 
 ```bash
-sudo evebox server --sqlite /var/log/suricata/eve.json
+sudo evebox server --sqlite --no-tls --host 127.0.0.1 --input /var/log/suricata/eve.json
 ```
 
 Confirm that Suricata has generated alerts. EveBox cannot show alerts that have not been written to `eve.json`.
@@ -56,16 +58,18 @@ Try opening EveBox through localhost.
 http://127.0.0.1:5636
 ```
 
-If localhost does not work from the Windows browser, find the WSL IP address and try that address with port `5636`.
-
-```bash
-hostname -I
-```
-
-Check whether EveBox is listening on port `5636`.
+The project demo scripts bind EveBox to localhost. If localhost does not work from the Windows browser, first confirm that EveBox is running and listening on `127.0.0.1:5636`.
 
 ```bash
 ss -tulpn | grep 5636
+```
+
+Do not expose the demo EveBox server to the network while authentication and TLS are disabled. If remote access is required, configure EveBox with proper authentication and TLS before changing the bind address.
+
+Check the WSL IP address only when you are deliberately troubleshooting WSL networking.
+
+```bash
+hostname -I
 ```
 
 ## suricata.yaml Test Fails

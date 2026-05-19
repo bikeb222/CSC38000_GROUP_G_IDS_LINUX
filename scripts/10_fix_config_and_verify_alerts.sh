@@ -10,6 +10,7 @@ PCAP_DIR="${PCAP_DIR:-/tmp/suricata-pcap-verification}"
 PCAP_FILE="${PCAP_DIR}/local-signature-test.pcap"
 OUT_DIR="${PCAP_DIR}/suricata-output"
 HTTP_PORT="8080"
+HOME_NET_VALUE="[127.0.0.1, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12]"
 
 echo "[1/8] Checking sudo access..."
 sudo -v
@@ -28,12 +29,28 @@ else
   echo "Created timestamp backup: ${SURICATA_CONF}.verify-${TS}.bak"
 fi
 
-echo "[4/8] Setting HOME_NET for WSL localhost and private networks..."
-sudo perl -0pi -e 's/^\s*HOME_NET:\s*".*?"/    HOME_NET: "[127.0.0.1,192.168.0.0\/16,10.0.0.0\/8,172.16.0.0\/12]"/m' "${SURICATA_CONF}"
+echo "[4/8] Setting HOME_NET for localhost and private lab networks..."
+sudo perl -0pi -e 'BEGIN { $home_net = shift @ARGV } s/^([ \t]*HOME_NET:[ \t]*).*$/\1"$home_net"/m' "${HOME_NET_VALUE}" "${SURICATA_CONF}"
+
+if ! sudo grep -Eq '^[[:space:]]*HOME_NET:[[:space:]]*"\[127\.0\.0\.1, 192\.168\.0\.0/16, 10\.0\.0\.0/8, 172\.16\.0\.0/12\]"[[:space:]]*$' "${SURICATA_CONF}"; then
+  echo "ERROR: Failed to verify HOME_NET in ${SURICATA_CONF}." >&2
+  echo "Expected value:" >&2
+  echo "  HOME_NET: \"${HOME_NET_VALUE}\"" >&2
+  echo "Current HOME_NET lines:" >&2
+  sudo grep -nE 'HOME_NET' "${SURICATA_CONF}" >&2 || true
+  exit 1
+fi
 
 echo "[5/8] Ensuring absolute local.rules path is loaded..."
 if ! sudo grep -qE '^[[:space:]]*-[[:space:]]*/etc/suricata/rules/local\.rules[[:space:]]*$' "${SURICATA_CONF}"; then
   sudo perl -0pi -e 's/(^rule-files:\n(?:[ \t]+-[^\n]*\n)*)/$1  - \/etc\/suricata\/rules\/local.rules\n/m' "${SURICATA_CONF}"
+fi
+
+if ! sudo grep -qE '^[[:space:]]*-[[:space:]]*/etc/suricata/rules/local\.rules[[:space:]]*$' "${SURICATA_CONF}"; then
+  echo "ERROR: Failed to verify that /etc/suricata/rules/local.rules is loaded in ${SURICATA_CONF}." >&2
+  echo "Current rule-files section:" >&2
+  sudo sed -n '/^rule-files:/,/^[^[:space:]-]/p' "${SURICATA_CONF}" >&2 || true
+  exit 1
 fi
 
 echo "Current relevant Suricata settings:"

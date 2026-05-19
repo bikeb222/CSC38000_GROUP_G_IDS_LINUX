@@ -50,7 +50,7 @@ Open the file:
   sudo nano /etc/suricata/suricata.yaml
 
 Verify these settings:
-  1. HOME_NET includes localhost and WSL private networks.
+  1. HOME_NET includes localhost and private lab networks.
   2. rule-files includes local.rules.
   3. eve-log is enabled and writes to /var/log/suricata/eve.json.
 

@@ -6,9 +6,11 @@ Edit the Suricata configuration file:
 sudo nano /etc/suricata/suricata.yaml
 ```
 
+This repository does not ship a full replacement `suricata.yaml` because the file is installed by the Suricata package and can vary by version. Apply only the required changes below, or run `scripts/10_fix_config_and_verify_alerts.sh` to back up and verify the installed configuration automatically.
+
 ## 1. Set HOME_NET
 
-`HOME_NET` tells Suricata which systems belong to the protected network. In WSL, include localhost and common private network ranges.
+`HOME_NET` tells Suricata which systems belong to the protected network. For this lab, include localhost and common private network ranges used by WSL, VM, or native Ubuntu test environments.
 
 ```yaml
 HOME_NET: "[127.0.0.1, 172.16.0.0/12, 192.168.0.0/16, 10.0.0.0/8]"

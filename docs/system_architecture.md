@@ -2,12 +2,12 @@
 
 ## Overview
 
-The system runs inside Ubuntu on WSL. Suricata monitors traffic, compares it against signature rules, and writes alerts to log files. EveBox reads the Suricata EVE JSON log and displays alerts through a web GUI.
+The system runs on Ubuntu Linux. It was tested on WSL/WSL2, and the same design applies to native Ubuntu or an Ubuntu VM. Suricata monitors traffic, compares it against signature rules, and writes alerts to log files. EveBox reads the Suricata EVE JSON log and displays alerts through a web GUI.
 
 ```text
-Windows Host
+Host System
    |
-   | WSL Ubuntu
+   | Ubuntu Linux environment
    |
    |-- Suricata IDS
    |     |-- ET Open ruleset
@@ -34,12 +34,12 @@ EveBox is the GUI layer. It does not perform detection; it helps the analyst rev
 
 ## Data Flow
 
-1. Test traffic is generated inside Ubuntu WSL.
+1. Test traffic is generated inside the Ubuntu environment.
 2. Suricata captures traffic from an interface such as `eth0` or `lo`, or reads packets from a PCAP file.
 3. Suricata compares the traffic with ET Open rules and custom local rules.
 4. Matching traffic produces alerts in `fast.log` and `eve.json`.
 5. EveBox reads `eve.json` and displays alert details in the browser.
 
-## WSL Considerations
+## Capture Considerations
 
-WSL networking may not mirror a full Linux VM. Some traffic may not be visible on the expected interface. The project therefore includes two validation paths: live monitoring and offline PCAP analysis.
+Live packet capture behavior can vary between WSL, VM, and native Linux interfaces. Some traffic may not be visible on the expected interface. The project therefore includes two validation paths: live monitoring and offline PCAP analysis.

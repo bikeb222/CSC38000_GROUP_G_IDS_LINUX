@@ -22,8 +22,11 @@ cat <<INFO
 Open the EveBox GUI in a browser:
   http://127.0.0.1:5636
 
+This demo command disables TLS and binds EveBox to localhost. Do not expose
+this port to a network without proper authentication and TLS.
+
 Press Ctrl+C to stop EveBox.
 INFO
 
 mkdir -p "${DATA_DIR}"
-sudo evebox server --sqlite --no-tls --data-directory "${DATA_DIR}" --input "${EVE_JSON}"
+sudo evebox server --sqlite --no-tls --host 127.0.0.1 --data-directory "${DATA_DIR}" --input "${EVE_JSON}"

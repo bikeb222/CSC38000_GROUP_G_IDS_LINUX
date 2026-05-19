@@ -2,7 +2,7 @@
 
 ## Recommended Automated Test
 
-This command is the easiest way to verify the project in WSL. It captures safe local traffic to a PCAP file, runs Suricata in offline mode, and prints the expected custom `LOCAL` alerts.
+This command is the easiest way to verify the project across WSL, VM, or native Ubuntu environments. It captures safe local traffic to a PCAP file, runs Suricata in offline mode, and prints the expected custom `LOCAL` alerts.
 
 ```bash
 ./scripts/10_fix_config_and_verify_alerts.sh
@@ -22,7 +22,7 @@ http://127.0.0.1:5636
 
 ## 1. Start Suricata in Live Mode
 
-This command starts Suricata on the default WSL network interface, usually `eth0`.
+This command starts Suricata on the default route interface, often `eth0`.
 
 ```bash
 ./scripts/06_run_suricata_live.sh
@@ -112,7 +112,7 @@ http://127.0.0.1:5636
 
 ## 7. Run PCAP Mode
 
-This command analyzes a saved packet capture file if WSL live capture is limited.
+This command analyzes a saved packet capture file if live capture is limited.
 
 ```bash
 ./scripts/09_run_suricata_pcap.sh path/to/file.pcap

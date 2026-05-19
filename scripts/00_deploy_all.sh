@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-echo "Suricata + EveBox WSL IDS deployment"
+echo "Suricata + EveBox IDS deployment"
 echo "Project root: ${PROJECT_ROOT}"
 echo
 
@@ -40,6 +40,10 @@ Deployment complete.
 
 Open EveBox in a browser:
   http://127.0.0.1:5636
+
+Security note:
+  The demo EveBox server is bound to localhost and disables authentication/TLS.
+  Do not expose port 5636 to a network in this mode.
 
 Useful evidence files:
   /tmp/suricata-pcap-verification/local-signature-test.pcap

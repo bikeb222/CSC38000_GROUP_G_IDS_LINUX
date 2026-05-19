@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide explains how to install the project on Ubuntu running inside WSL or WSL2.
+This guide explains how to install the project on Ubuntu Linux. The workflow was tested on WSL/WSL2 and is also suitable for native Ubuntu or an Ubuntu VM.
 
 ## Recommended One-Command Deployment
 
@@ -19,7 +19,7 @@ The manual steps below are kept for troubleshooting and for explaining the insta
 This command moves the terminal into the repository that contains the scripts and documentation.
 
 ```bash
-cd suricata-evebox-wsl-ids
+cd CSC38000_GROUP_G_IDS_LINUX
 ```
 
 ## 2. Install Basic Tools
@@ -58,13 +58,13 @@ If the configuration test fails, edit `/etc/suricata/suricata.yaml` and verify `
 
 ## 6. Install EveBox
 
-This script checks whether EveBox is already installed. If it is not installed, it prints cautious manual installation instructions using the official EveBox releases page.
+This script checks whether EveBox is already installed. If it is not installed, it adds the official EveBox stable APT repository and installs the current `evebox` package.
 
 ```bash
 ./scripts/05_install_evebox.sh
 ```
 
-After installing EveBox manually, confirm that the binary is available.
+After installing EveBox, confirm that the binary is available.
 
 ```bash
 evebox --version

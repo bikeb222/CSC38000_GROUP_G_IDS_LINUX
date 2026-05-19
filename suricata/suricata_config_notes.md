@@ -10,9 +10,11 @@ The main Suricata configuration file is usually:
 
 Always create a backup before editing this file. The configuration script creates `/etc/suricata/suricata.yaml.bak` if it does not already exist.
 
+The project intentionally does not include a complete replacement `suricata.yaml` because the packaged file can vary by Suricata version. Use the notes below to update the installed file, then run a configuration test.
+
 ## HOME_NET
 
-`HOME_NET` defines the protected network. For this project, it should include localhost and common private IP ranges used by WSL.
+`HOME_NET` defines the protected network. For this project, it should include localhost and common private IP ranges used by WSL, VM, or native Ubuntu test environments.
 
 ```yaml
 HOME_NET: "[127.0.0.1, 172.16.0.0/12, 192.168.0.0/16, 10.0.0.0/8]"

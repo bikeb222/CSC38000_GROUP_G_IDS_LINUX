@@ -6,7 +6,7 @@ The testing plan verifies that Suricata detects traffic using signature rules an
 
 ## Recommended Verification
 
-Use the automated PCAP verification script for WSL deployments.
+Use the automated PCAP verification script for reliable deployments across WSL, VM, or native Ubuntu environments.
 
 ```bash
 ./scripts/10_fix_config_and_verify_alerts.sh
@@ -28,14 +28,14 @@ http://127.0.0.1:5636
 
 ## Test Modes
 
-Live traffic mode runs Suricata on a WSL network interface. The default interface is usually `eth0`, but localhost tests may require `lo`.
+Live traffic mode runs Suricata on a Linux network interface. The default route interface is often `eth0`, but localhost tests may require `lo`.
 
 ```bash
 ./scripts/06_run_suricata_live.sh
 ./scripts/06_run_suricata_live.sh lo
 ```
 
-PCAP mode runs Suricata against a saved packet capture file. This mode is useful when WSL live capture does not behave as expected.
+PCAP mode runs Suricata against a saved packet capture file. This mode is useful when live capture does not behave as expected.
 
 ```bash
 ./scripts/09_run_suricata_pcap.sh path/to/file.pcap
@@ -90,4 +90,4 @@ http://127.0.0.1:5636
 
 ## Minimum Passing Result
 
-The project should trigger at least three custom alerts. Good candidates are ICMP ping, HTTP test string, and SSH or Nmap connection behavior. If one test does not alert in WSL live mode, document the limitation and validate with PCAP mode.
+The project should trigger at least three custom alerts. Good candidates are ICMP ping, HTTP test string, and SSH or Nmap connection behavior. If one test does not alert in live mode, document the limitation and validate with PCAP mode.
