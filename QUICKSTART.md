@@ -1,6 +1,6 @@
 # Quickstart for Teammates
 
-This is the shortest deployment path for Ubuntu Linux. It was tested on WSL/WSL2 and can also be used on native Ubuntu or an Ubuntu VM.
+This is the shortest deployment path for Debian-family Linux. It was tested on WSL/WSL2 and can also be used on native Ubuntu, Debian, or a Linux VM.
 
 ## 1. Enter the Project Directory
 
@@ -16,7 +16,7 @@ This command installs dependencies, installs Suricata, updates ET Open rules, in
 ./scripts/00_deploy_all.sh
 ```
 
-Enter your Ubuntu `sudo` password when prompted.
+Enter your Linux `sudo` password when prompted.
 
 ## 3. Open EveBox
 

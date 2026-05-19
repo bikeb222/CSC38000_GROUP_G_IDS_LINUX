@@ -1,6 +1,6 @@
-# Design and Implementation of a Signature-Based IDS with Suricata and EveBox on Ubuntu Linux
+# Design and Implementation of a Signature-Based IDS with Suricata and EveBox on Linux
 
-This project implements a signature-based Intrusion Detection System using Suricata IDS on Ubuntu Linux. It was tested on WSL/WSL2, but the same workflow can be used on a native Ubuntu installation or an Ubuntu virtual machine. Suricata detects suspicious traffic using ET Open rules and custom local rules. Alerts are written to EVE JSON format and displayed through the EveBox web GUI.
+This project implements a signature-based Intrusion Detection System using Suricata IDS on Linux. It was tested on WSL/WSL2, Ubuntu, and Debian-style environments. Suricata detects suspicious traffic using ET Open rules and custom local rules. Alerts are written to EVE JSON format and displayed through the EveBox web GUI.
 
 ## Fast Deployment
 
@@ -21,7 +21,7 @@ See `QUICKSTART.md` for the simplified workflow. The rest of this README explain
 
 ## Project Purpose
 
-The purpose of this project is to design, install, configure, and test a Linux-based Intrusion Detection System. The IDS monitors network traffic, compares packets and flows against known attack signatures, and records alerts when traffic matches a rule. The project uses Ubuntu Linux as the operating environment, Suricata as the IDS engine, and EveBox as the graphical interface for reviewing alerts.
+The purpose of this project is to design, install, configure, and test a Linux-based Intrusion Detection System. The IDS monitors network traffic, compares packets and flows against known attack signatures, and records alerts when traffic matches a rule. The project uses a Debian-family Linux environment as the operating environment, Suricata as the IDS engine, and EveBox as the graphical interface for reviewing alerts.
 
 ## Why This Is Signature-Based
 
@@ -42,7 +42,7 @@ Suricata writes alerts to log files such as `fast.log` and `eve.json`. EveBox pr
 
 ## Linux Environment Notes
 
-Ubuntu on WSL provides a convenient Linux environment on a Windows host without requiring a full virtual machine. The project is not limited to WSL: it can also run on native Ubuntu or an Ubuntu VM. Because live packet capture can vary across WSL, VM, and native interfaces, the project supports both live traffic mode and offline PCAP mode.
+Ubuntu on WSL provides a convenient Linux environment on a Windows host without requiring a full virtual machine. The project is not limited to WSL: it can also run on native Ubuntu, Debian, or a Linux VM. Because live packet capture can vary across WSL, VM, and native interfaces, the project supports both live traffic mode and offline PCAP mode.
 
 ## Repository Layout
 
@@ -70,7 +70,7 @@ Install basic Linux tools used by the project. This includes tools for package s
 ./scripts/01_install_dependencies.sh
 ```
 
-Install Suricata from the OISF stable PPA. The script also prints Suricata build information, which should be saved as evidence for the final report.
+Install Suricata. On Ubuntu, the script uses the OISF stable PPA. On Debian, it installs from the official repositories or enables backports when needed. The script also prints Suricata build information, which should be saved as evidence for the final report.
 
 ```bash
 ./scripts/02_install_suricata.sh

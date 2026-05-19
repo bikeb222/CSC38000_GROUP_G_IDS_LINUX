@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[1/3] Updating Ubuntu package indexes..."
+echo "[1/3] Updating package indexes..."
 sudo apt update
 
 echo "[2/3] Installing base tools used by this Suricata IDS project..."
